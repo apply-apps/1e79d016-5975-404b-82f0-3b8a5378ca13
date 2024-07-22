@@ -1,153 +1,173 @@
 // Filename: index.js
 // Combined code from all files
 
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Dimensions, Button, Alert } from 'react-native';
+// This file combines HTML and CSS for a static restaurant website
 
-const GRID_SIZE = 16;
-const CELL_SIZE = Dimensions.get('window').width / GRID_SIZE;
-
-const initialSnake = [{ x: 8, y: 8 }];
-const initialFood = { x: 5, y: 5 };
-
-const SnakeGame = () => {
-    const [snake, setSnake] = useState(initialSnake);
-    const [food, setFood] = useState(initialFood);
-    const [direction, setDirection] = useState('RIGHT');
-    const [running, setRunning] = useState(false);
-
-    useEffect(() => {
-        if (running) {
-            const intervalId = setInterval(moveSnake, 200);
-            return () => clearInterval(intervalId);
-        }
-    }, [snake, direction, running]);
-
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            switch (e.key) {
-                case 'ArrowUp':
-                    if (direction !== 'DOWN') setDirection('UP');
-                    break;
-                case 'ArrowDown':
-                    if (direction !== 'UP') setDirection('DOWN');
-                    break;
-                case 'ArrowLeft':
-                    if (direction !== 'RIGHT') setDirection('LEFT');
-                    break;
-                case 'ArrowRight':
-                    if (direction !== 'LEFT') setDirection('RIGHT');
-                    break;
-                default:
-                    break;
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [direction]);
-
-    const moveSnake = () => {
-        const head = { ...snake[0] };
-        switch (direction) {
-            case 'UP':
-                head.y -= 1;
-                break;
-            case 'DOWN':
-                head.y += 1;
-                break;
-            case 'LEFT':
-                head.x -= 1;
-                break;
-            case 'RIGHT':
-                head.x += 1;
-                break;
+const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        const newSnake = [head, ...snake];
-        if (head.x === food.x && head.y === food.y) {
-            setFood({ x: Math.floor(Math.random() * GRID_SIZE), y: Math.floor(Math.random() * GRID_SIZE) });
-        } else {
-            newSnake.pop();
+        header {
+            background-color: #DAA520;
+            padding: 10px 0;
+            text-align: center;
         }
-        if (checkCollision(head, newSnake)) {
-            Alert.alert("Game Over", "You crashed!", [{ text: "Restart", onPress: resetGame }]);
-            setRunning(false);
-        } else {
-            setSnake(newSnake);
+
+        header h1 {
+            color: #fff;
+            margin: 0;
         }
-    };
 
-    const checkCollision = (head, newSnake) => {
-        return head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE || newSnake.slice(1).some(segment => segment.x === head.x && segment.y === head.y);
-    };
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
 
-    const resetGame = () => {
-        setSnake(initialSnake);
-        setFood(initialFood);
-        setDirection('RIGHT');
-        setRunning(true);
-    };
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
 
-    return (
-        <View style={styles.gameContainer}>
-            <Button title="Start Game" onPress={resetGame} disabled={running} />
-            <View style={styles.grid}>
-                {snake.map((segment, index) => (
-                    <View key={index} style={[styles.snakeSegment, { left: segment.x * CELL_SIZE, top: segment.y * CELL_SIZE }]} />
-                ))}
-                <View style={[styles.food, { left: food.x * CELL_SIZE, top: food.y * CELL_SIZE }]} />
-            </View>
-        </View>
-    );
-};
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-const styles = StyleSheet.create({
-    gameContainer: {
-        alignItems: 'center',
-    },
-    grid: {
-        width: GRID_SIZE * CELL_SIZE,
-        height: GRID_SIZE * CELL_SIZE,
-        backgroundColor: '#EAEAEA',
-        marginTop: 20,
-        position: 'relative',
-    },
-    snakeSegment: {
-        width: CELL_SIZE,
-        height: CELL_SIZE,
-        backgroundColor: 'green',
-        position: 'absolute',
-    },
-    food: {
-        width: CELL_SIZE,
-        height: CELL_SIZE,
-        backgroundColor: 'red',
-        position: 'absolute',
-    },
-});
+        .section {
+            padding: 20px;
+            text-align: center;
+        }
 
-export default function App() {
-    return (
-        <SafeAreaView style={appStyles.container}>
-            <Text style={appStyles.title}>Snake Game</Text>
-            <SnakeGame />
-        </SafeAreaView>
-    );
-}
+        #home {
+            background: url('https://picsum.photos/1600/800?random=1') no-repeat center center/cover;
+            color: #fff;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-const appStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: 30,
-        backgroundColor: '#FFFFFF',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-});
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .section p, .section ul {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        #menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #menu ul li {
+            margin: 10px 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-top: 10px;
+        }
+
+        input[type="text"], 
+        input[type="email"], 
+        textarea {
+            margin-top: 5px;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #DAA520;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #FFC107;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.8em;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Delicious Restaurant</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="home" class="section">
+        <h2>Welcome to Delicious Restaurant</h2>
+        <p>Enjoy the finest culinary delights prepared by our expert chefs.</p>
+    </section>
+    <section id="menu" class="section">
+        <h2>Our Menu</h2>
+        <ul>
+            <li>Grilled Chicken - $12.99</li>
+            <li>Spaghetti Carbonara - $14.99</li>
+            <li>Caesar Salad - $9.99</li>
+            <li>Margherita Pizza - $13.99</li>
+        </ul>
+    </section>
+    <section id="about" class="section">
+        <h2>About Us</h2>
+        <p>Delicious Restaurant has been serving excellent food since 2000. Our chefs use the freshest ingredients to create delicious meals.</p>
+    </section>
+    <section id="contact" class="section">
+        <h2>Contact Us</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy; 2023 Delicious Restaurant. All rights reserved.</p>
+    </footer>
+</body>
+</html>`;
+ 
+console.log(htmlContent);
